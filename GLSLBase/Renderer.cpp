@@ -46,6 +46,16 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	//메인메모리상에 버텍스 데이터 생성
+	float vertices[] = { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f };
+	//버퍼오브젝트 생성하고 아이디 부여
+	glGenBuffers(1, &m_Lecture2);
+	//Array 데이터를 저장한다고 명시
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture2);
+	//GPU상의 메모리에 데이터를 복사
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//여기까지 완료하면 데이터 준비 끝
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -174,8 +184,16 @@ void Renderer::Test()
 	glDisableVertexAttribArray(attribPosition);
 }
 
-void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
+
+void Renderer::Lecture2()
 {
-	*newX = x * 2.f / m_WindowSizeX;
-	*newY = y * 2.f / m_WindowSizeY;
+	glUseProgram(m_SolidRectShader);
+
+	glEnableVertexAttribArray(0);
+	//ARRAY 형태를 사용할 것이라고 명시 & 아이디값
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture2);
+	//Draw시 데이터를 읽어갈 단위 (어디서부터 어디까지 읽을건지 등...)
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//그려라!
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
