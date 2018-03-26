@@ -263,30 +263,29 @@ void Renderer::Lecture4()
 	GLint id1 = glGetUniformLocation(m_SolidRectShader, "gPos");
 	GLint id2 = glGetUniformLocation(m_SolidRectShader, "gScale");
 
+	//왔다갔다 코드
+	//glEnableVertexAttribArray(id0);
+	//glBindBuffer(GL_ARRAY_BUFFER, m_Lecture4);
+	//glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	//glUniform1f(id1, pos);
+	//if (pos >= 0.5f || pos <= -0.5f)
+	//	tmp *= -1;
+	//pos += 0.02f*tmp;
+
+	//glUniform1f(id2, scale);
+	//if (scale > 1.0f || scale < -1.0f)
+	//	tm2 *= -1;
+	//scale += 0.05f*tm2;
+
+	//원그리기
 	glEnableVertexAttribArray(id0);
-	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture4);
-	glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
+	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-
-	glUniform1f(id1, pos);
-	if (pos >= 0.5f || pos <= -0.5f)
-		tmp *= -1;
-	pos += 0.02f*tmp;
-
-	glUniform1f(id2, scale);
-	if (scale > 1.0f || scale < -1.0f)
-		tm2 *= -1;
-	scale += 0.05f*tm2;
-
-	/*glUniform1f(id3, scale);
-	if (pos >= 0.4f || pos <= -0.4f) {
-		if (tmp < 0)
-			scale -= 0.1f;
-		else
-			scale += 0.1f;
-	}*/
-
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	//그려라!
-	glDrawArrays(GL_LINES, 0, 3);
+	//glDrawArrays(GL_LINES, 0, 3);
 }
