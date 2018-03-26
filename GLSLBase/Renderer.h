@@ -17,6 +17,8 @@ public:
 	void Test();
 
 	void Lecture2();
+	void Lecture3();
+	void Lecture4();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -34,5 +36,12 @@ private:
 	GLuint m_SolidRectShader = 0;
 
 	GLuint m_Lecture2 = 0;
+	GLuint m_Lecture3 = 0;
+	GLuint m_Lecture4 = 0;
+
+	float scale = 1.0f;
+	float tmp = 1.0f;
+	float tm2 = 1.0f;
+	float pos = 0.0f;
 };
 

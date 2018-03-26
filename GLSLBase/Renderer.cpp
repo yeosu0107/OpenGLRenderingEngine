@@ -47,15 +47,41 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
+
+	//Lecture03
 	//메인메모리상에 버텍스 데이터 생성
-	float vertices[] = { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f };
+	float vertices[] = { 
+		0.0f, 0.0f, 0.0f, 1.0f, 
+		1.0f, 0.0f, 0.0f, 1.0f, 
+		1.0f, 1.0f, 0.0f, 1.0f};
+	//버퍼오브젝트 생성하고 아이디 부여
+	glGenBuffers(1, &m_Lecture3);
+	//Array 데이터를 저장한다고 명시
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture3);
+	//GPU상의 메모리에 데이터를 복사
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//여기까지 완료하면 데이터 준비 끝
+
+	float color[] = {
+		1.0f, 1.0f, 0.0f, 1.0f,
+		0.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 1.0f };
 	//버퍼오브젝트 생성하고 아이디 부여
 	glGenBuffers(1, &m_Lecture2);
 	//Array 데이터를 저장한다고 명시
 	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture2);
 	//GPU상의 메모리에 데이터를 복사
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
 	//여기까지 완료하면 데이터 준비 끝
+
+	//Lecture04
+	float vertices2[] = {
+		-0.5f, 0.0f, 0.0f, 0.0f,
+		0.5f, 0.0f, 0.0f, 1.0f
+	};
+	glGenBuffers(1, &m_Lecture4);
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture4);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -196,4 +222,71 @@ void Renderer::Lecture2()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	//그려라!
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void Renderer::Lecture3()
+{
+	glUseProgram(m_SolidRectShader);
+
+	GLint id0 = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	GLint id1 = glGetAttribLocation(m_SolidRectShader, "a_Color");
+	GLint id2 = glGetUniformLocation(m_SolidRectShader, "gScale");
+	//셰이더 코드, 셰이더 코드 인풋 레이아웃
+
+	glEnableVertexAttribArray(id0);
+	//ARRAY 형태를 사용할 것이라고 명시 & 아이디값
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture3);
+	//Draw시 데이터를 읽어갈 단위 (어디서부터 어디까지 읽을건지 등...)
+	glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glEnableVertexAttribArray(id1);
+	//ARRAY 형태를 사용할 것이라고 명시 & 아이디값
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture2);
+	//Draw시 데이터를 읽어갈 단위 (어디서부터 어디까지 읽을건지 등...)
+	glVertexAttribPointer(id1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glUniform1f(id2, scale);
+	if (scale > 1.0f || scale < -1.0f)
+		tmp *= -1;
+	scale += 0.02f*tmp;
+		
+
+	//그려라!
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void Renderer::Lecture4()
+{
+	glUseProgram(m_SolidRectShader);
+
+	GLint id0 = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	GLint id1 = glGetUniformLocation(m_SolidRectShader, "gPos");
+	GLint id2 = glGetUniformLocation(m_SolidRectShader, "gScale");
+
+	glEnableVertexAttribArray(id0);
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture4);
+	glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	glUniform1f(id1, pos);
+	if (pos >= 0.5f || pos <= -0.5f)
+		tmp *= -1;
+	pos += 0.02f*tmp;
+
+	glUniform1f(id2, scale);
+	if (scale > 1.0f || scale < -1.0f)
+		tm2 *= -1;
+	scale += 0.05f*tm2;
+
+	/*glUniform1f(id3, scale);
+	if (pos >= 0.4f || pos <= -0.4f) {
+		if (tmp < 0)
+			scale -= 0.1f;
+		else
+			scale += 0.1f;
+	}*/
+
+
+	//그려라!
+	glDrawArrays(GL_LINES, 0, 3);
 }
