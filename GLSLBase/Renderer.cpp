@@ -18,12 +18,14 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_WindowSizeY = windowSizeY;
 
 	//Load shaders
-	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	
+	m_SolidRectShader = CompileShaders("./Shaders/Lecture06.vs", "./Shaders/Lecture06.fs");
+	m_targetPaticleShader = CompileShaders("./Shaders/targetPaticle.vs", "./Shaders/targetPaticle.fs");
+	m_FragmentAniShader= CompileShaders("./Shaders/FragmentAnimation.vs", "./Shaders/FragmentAnimation.fs");
 	//Create VBOs
-	CreateVertexBufferObjects();
+	targetPaticleBufferObjects();
+	fragmentAniBufferObjects();
 
-	if (m_SolidRectShader > 0 && m_VBORect > 0)
+	if (m_SolidRectShader > 0)
 	{
 		m_Initialized = true;
 	}
@@ -82,6 +84,85 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_Lecture4);
 	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture4);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+
+	//Lecture05
+	float Position[9] = { 
+		0.0, 1.0, 0.0, 
+		-1.0, -1.0, 0.0, 
+		1.0, -1.0, 0.0 
+	};
+	float Colors[12] = { 
+		1.0, 1.0, 1.0, 1.0, 
+		1.0, 0.0, 0.0, 1.0, 
+		0.0, 0.0, 1.0, 1.0 
+	};
+	float PositionColor[] = { 
+		0.0, 1.0, 0.0, 1.0f, 1.0, 1.0, 1.0, 1.0, 
+		-1.0, -1.0, 0.0, 1.0f,  1.0, 0.0, 0.0, 1.0, 
+		1.0, -1.0, 0.0, 1.0f, 0.0, 0.0, 1.0, 1.0 
+	};
+
+	glGenBuffers(1, &m_tri);
+	glBindBuffer(GL_ARRAY_BUFFER, m_tri);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Position), Position, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &m_col);
+	glBindBuffer(GL_ARRAY_BUFFER, m_col);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Colors), Colors, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &m_tricol);
+	glBindBuffer(GL_ARRAY_BUFFER, m_tricol);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(PositionColor), PositionColor, GL_STATIC_DRAW);
+
+	//Lecture06
+	const int max = 500;
+	float *testPosition = new float[(max+1)*4];
+	for (int i = 0; i < max; ++i) {
+		//testPosition[i * 4] = (2.0f * (float)i / (float)max)- 1.0f;
+		testPosition[i * 4] = (2.0f * (float)i / (float)max);
+		//testPosition[i * 4 + 1] = 0.0f;
+		testPosition[i * 4 + 1] = (float)rand() / float(RAND_MAX);
+		testPosition[i * 4 + 2] = (float)rand() / float(RAND_MAX);
+		//testPosition[i *4 + 2] = 0.0f;
+		testPosition[i *4 + 3] = 1.0f;
+		if ((float)rand() / float(RAND_MAX) > 0.5f)
+			testPosition[i * 4+2] *= -1.0f;
+	}
+	glGenBuffers(1, &m_Lecture6);
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture6);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*4*(max+1), testPosition, GL_STATIC_DRAW);
+}
+
+void Renderer::targetPaticleBufferObjects()
+{
+	//
+	const int max = 500;
+	float *testPosition = new float[(max) * 4];
+	for (int i = 0; i < max; ++i) {
+		testPosition[i * 4 + 0] = (float)i / (float)max * 2;					//start time
+		testPosition[i * 4 + 1] = (float)rand() / float(RAND_MAX);	//period
+		testPosition[i * 4 + 2] = (float)rand() / float(RAND_MAX);	//width
+		testPosition[i * 4 + 3] = 1.0f;
+		if ((float)rand() / float(RAND_MAX) > 0.5f)
+			testPosition[i * 4 + 2] *= -1.0f;
+	}
+	glGenBuffers(1, &m_Lecture6);
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture6);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * (max), testPosition, GL_STATIC_DRAW);
+}
+
+void Renderer::fragmentAniBufferObjects()
+{
+	float rect[]
+		=
+	{
+		-1.0, -1.0, 0.f, -1.0, 1.0, 0.f, 1.0, 1.0, 0.f, //Triangle1
+		-1.0, -1.0, 0.f,  1.0, 1.0, 0.f, 1.0, -1.0, 0.f, //Triangle2
+	};
+
+	glGenBuffers(1, &m_fragAni);
+	glBindBuffer(GL_ARRAY_BUFFER, m_fragAni);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -189,27 +270,24 @@ GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 	}
 
 	glUseProgram(ShaderProgram);
-	std::cout << filenameVS << ", " << filenameFS << " Shader compiling is done.";
+	std::cout << filenameVS << ", " << filenameFS << " Shader compiling is done.\n";
 
 	return ShaderProgram;
 }
 
 void Renderer::Test()
 {
-	float newX, newY;
-
 	glUseProgram(m_SolidRectShader);
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(attribPosition);
 }
-
 
 void Renderer::Lecture2()
 {
@@ -246,10 +324,8 @@ void Renderer::Lecture3()
 	glVertexAttribPointer(id1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glUniform1f(id2, scale);
-	if (scale > 1.0f || scale < -1.0f)
+	if (scale > 1.0f || scale < 0.1f)
 		tmp *= -1;
-	scale += 0.02f*tmp;
-		
 
 	//그려라!
 	glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -260,32 +336,111 @@ void Renderer::Lecture4()
 	glUseProgram(m_SolidRectShader);
 
 	GLint id0 = glGetAttribLocation(m_SolidRectShader, "a_Position");
-	GLint id1 = glGetUniformLocation(m_SolidRectShader, "gPos");
+	GLint id1 = glGetUniformLocation(m_SolidRectShader, "gColor");
 	GLint id2 = glGetUniformLocation(m_SolidRectShader, "gScale");
-
-	//왔다갔다 코드
-	//glEnableVertexAttribArray(id0);
-	//glBindBuffer(GL_ARRAY_BUFFER, m_Lecture4);
-	//glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-
-
-	//glUniform1f(id1, pos);
-	//if (pos >= 0.5f || pos <= -0.5f)
-	//	tmp *= -1;
-	//pos += 0.02f*tmp;
-
-	//glUniform1f(id2, scale);
-	//if (scale > 1.0f || scale < -1.0f)
-	//	tm2 *= -1;
-	//scale += 0.05f*tm2;
 
 	//원그리기
 	glEnableVertexAttribArray(id0);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
-	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	glUniform1f(id2, scale);
+	if (scale > 1.0f || scale < 0.0f)
+		tm2 *= -1;
+	scale += 0.01f*tm2;
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	//그려라!
 	//glDrawArrays(GL_LINES, 0, 3);
+}
+
+void Renderer::Lecture5()
+{
+	glUseProgram(m_SolidRectShader);
+
+	GLint id0 = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	GLint id1 = glGetAttribLocation(m_SolidRectShader, "a_Color");
+
+	glEnableVertexAttribArray(id0);
+	glEnableVertexAttribArray(id1);
+
+	////따로 그리기
+	//glBindBuffer(GL_ARRAY_BUFFER, m_tri);
+	//glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	////어트리뷰트ID, 사이즈(몇개씩), 포맷, 노말라이즈 여부, 스트라이드(건너뛰는 단위), 시작점포인터
+	//glBindBuffer(GL_ARRAY_BUFFER, m_col);
+	//glVertexAttribPointer(id1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	//패킹해서 한번에 그리기
+	glBindBuffer(GL_ARRAY_BUFFER, m_tricol);
+	glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 8*sizeof(float), 0); 
+	//처음부터 3개씩 읽고, 다음 점은 처음에서 7번째 뒤
+	glVertexAttribPointer(id1, 4, GL_FLOAT, GL_FALSE, 8*sizeof(float), (GLvoid*)(4*sizeof(float)));
+	//처음에서 3개건너뛴 4번째부터 4개씩 읽고, 다음점은 시작점에서 7번째 뒤
+
+	glDrawArrays(GL_TRIANGLES, 0, 3); //모드, 시작포인터, 갯수
+}
+
+void Renderer::Lecture6()
+{
+	glUseProgram(m_SolidRectShader);
+
+	GLint id0 = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	GLint id2 = glGetUniformLocation(m_SolidRectShader, "move");
+	GLint id3= glGetUniformLocation(m_SolidRectShader, "startPoint");
+	GLint id4 = glGetUniformLocation(m_SolidRectShader, "endPoint");
+
+	glEnableVertexAttribArray(id0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture6);
+
+	glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glUniform1f(id2, scale);
+	scale += 0.05f;
+
+	glUniform2f(id3, 0.0f, 0.0f); //원점
+	glUniform2f(id4, m_xPos, m_yPos);
+
+
+	glDrawArrays(GL_POINTS, 0, 500);
+}
+
+void Renderer::TargetPaticle(float sx, float sy, float tx, float ty, float time)
+{
+	GLuint shader = m_targetPaticleShader;
+	glUseProgram(shader);
+
+	GLint id0 = glGetAttribLocation(shader, "a_Position");
+	GLint id2 = glGetUniformLocation(shader, "time");
+	GLint id3 = glGetUniformLocation(shader, "startPoint");
+	GLint id4 = glGetUniformLocation(shader, "endPoint");
+
+	glEnableVertexAttribArray(id0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_Lecture6);
+
+	glVertexAttribPointer(id0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glUniform1f(id2, time);
+	glUniform2f(id3, sx, sy);	//시작점
+	glUniform2f(id4, tx, ty);	//끝점
+
+	//glPointSize(3);
+	glDrawArrays(GL_POINTS, 0, 500);
+}
+
+void Renderer::FragmentAni()
+{
+	GLuint shader = m_FragmentAniShader;
+	glUseProgram(shader);
+
+	GLint id0 = glGetAttribLocation(shader, "a_Position");
+
+	glEnableVertexAttribArray(id0);
+
+	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(id0);
 }

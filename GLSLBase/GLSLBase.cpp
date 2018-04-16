@@ -17,6 +17,8 @@ but WITHOUT ANY WARRANTY.
 
 Renderer *g_Renderer = NULL;
 
+float g_time = 0.0f;
+
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -25,8 +27,9 @@ void RenderScene(void)
 	// Renderer Test
 	//g_Renderer->Test();
 	//g_Renderer->Lecture3();
-	g_Renderer->Lecture4();
-
+	/*g_Renderer->TargetPaticle(0,0,1,1, g_time);
+	g_time += 0.01f;*/
+	g_Renderer->FragmentAni();
 	glutSwapBuffers();
 }
 

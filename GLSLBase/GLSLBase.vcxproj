@@ -171,8 +171,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\FragmentAnimation.fs" />
+    <None Include="Shaders\FragmentAnimation.vs" />
+    <None Include="Shaders\Lecture05.fs" />
+    <None Include="Shaders\Lecture05.vs" />
+    <None Include="Shaders\Lecture06.fs" />
+    <None Include="Shaders\Lecture06.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
+    <None Include="Shaders\targetPaticle.fs" />
+    <None Include="Shaders\targetPaticle.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

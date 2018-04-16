@@ -1,12 +1,12 @@
 #version 330
 
-in vec4 a_Position;
-in vec4 a_Color;
+attribute vec4 a_Position;
+//in vec4 a_Color;
 
 uniform float gPos;
 uniform float gScale;
 
-out vec2 v_value;
+varying vec2 v_value;
 
 void main()
 {

@@ -29,6 +29,30 @@
     <None Include="Shaders\SolidRect.fs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\Lecture05.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\Lecture05.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\Lecture06.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\Lecture06.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\targetPaticle.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\targetPaticle.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\FragmentAnimation.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\FragmentAnimation.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
