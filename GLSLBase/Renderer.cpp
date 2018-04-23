@@ -21,9 +21,13 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/Lecture06.vs", "./Shaders/Lecture06.fs");
 	m_targetPaticleShader = CompileShaders("./Shaders/targetPaticle.vs", "./Shaders/targetPaticle.fs");
 	m_FragmentAniShader= CompileShaders("./Shaders/FragmentAnimation.vs", "./Shaders/FragmentAnimation.fs");
+	m_raiderShader = CompileShaders("./Shaders/raider.vs", "./Shaders/raider.fs");
+	m_fillShader = CompileShaders("./Shaders/fillRect.vs", "./Shaders/fillRect.fs");
 	//Create VBOs
 	targetPaticleBufferObjects();
 	fragmentAniBufferObjects();
+	raiderBufferObjects();
+	fillBufferObjcects();
 
 	if (m_SolidRectShader > 0)
 	{
@@ -164,6 +168,36 @@ void Renderer::fragmentAniBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_fragAni);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 }
+
+void Renderer::raiderBufferObjects()
+{
+	float rect[]
+		=
+	{
+		-1.0, -1.0, 0.f, -1.0, 1.0, 0.f, 1.0, 1.0, 0.f, //Triangle1
+		-1.0, -1.0, 0.f,  1.0, 1.0, 0.f, 1.0, -1.0, 0.f, //Triangle2
+	};
+
+	glGenBuffers(1, &m_raider);
+	glBindBuffer(GL_ARRAY_BUFFER, m_raider);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+}
+
+void Renderer::fillBufferObjcects()
+{
+	float rect[]
+		=
+	{
+		-1.0, -1.0, 0.f, -1.0, 1.0, 0.f, 1.0, 1.0, 0.f, //Triangle1
+		-1.0, -1.0, 0.f,  1.0, 1.0, 0.f, 1.0, -1.0, 0.f, //Triangle2
+	};
+
+	glGenBuffers(1, &m_fillrect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_fillrect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+}
+
+
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
@@ -430,17 +464,73 @@ void Renderer::TargetPaticle(float sx, float sy, float tx, float ty, float time)
 	glDrawArrays(GL_POINTS, 0, 500);
 }
 
-void Renderer::FragmentAni()
+void Renderer::FragmentAni(float* centers, float time) //input 5
 {
 	GLuint shader = m_FragmentAniShader;
 	glUseProgram(shader);
 
 	GLint id0 = glGetAttribLocation(shader, "a_Position");
+	GLint id1 = glGetUniformLocation(shader, "time");
+	GLint id2 = glGetUniformLocation(shader, "centerPos");
 
 	glEnableVertexAttribArray(id0);
 
 	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
+	glUniform1f(id1, time);
+
+	glUniform2fv(id2, 5, centers);
+
 	glDisableVertexAttribArray(id0);
+}
+
+void Renderer::Raider()
+{
+	GLuint shader = m_raiderShader;
+
+	GLfloat target[] = {
+		0.3f, 0.3f, -0.4f, 0.5f, 0.6f, -0.8f
+	};
+
+	glUseProgram(shader);
+
+
+	GLint id0 = glGetAttribLocation(shader, "a_Position");
+	GLint id1 = glGetUniformLocation(shader, "u_target");
+	GLint id2 = glGetUniformLocation(shader, "time");
+
+	glEnableVertexAttribArray(id0);
+	glBindBuffer(GL_ARRAY_BUFFER, m_raider);
+	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glUniform2fv(id1, 3, target);
+	scale += 0.01f;
+	glUniform1f(id2, scale);
+
+	glDisableVertexAttribArray(id0);
+}
+
+void Renderer::fillAll(float r, float g, float b, float a)
+{
+	GLuint shader = m_fillShader;
+
+	glUseProgram(shader);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	GLint id0 = glGetAttribLocation(shader, "a_Position");
+	GLint id1 = glGetUniformLocation(shader, "v_Color");
+	glEnableVertexAttribArray(id0);
+	glBindBuffer(GL_ARRAY_BUFFER, m_fillrect);
+	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glUniform4f(id1, r, g, b, a);
+
+	glDisableVertexAttribArray(id0);
+
+	glDisable(GL_BLEND);
 }

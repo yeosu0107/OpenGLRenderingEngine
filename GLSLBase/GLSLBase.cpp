@@ -18,18 +18,31 @@ but WITHOUT ANY WARRANTY.
 Renderer *g_Renderer = NULL;
 
 float g_time = 0.0f;
+float g_mouseInput[10];
+int    g_mouse = 0;
 
 void RenderScene(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
+	g_Renderer->fillAll(0, 0, 0, 0.1);
 	// Renderer Test
 	//g_Renderer->Test();
 	//g_Renderer->Lecture3();
-	/*g_Renderer->TargetPaticle(0,0,1,1, g_time);
+	/*
 	g_time += 0.01f;*/
-	g_Renderer->FragmentAni();
+	//float tmp[] = {
+	//	-1,1,
+	//	1,1,
+	//	0,0,
+	//	-1,-1,
+	//	1,-1
+	//};
+	//g_time += 0.1f;
+	g_time += 0.01f;
+	//g_Renderer->TargetPaticle(0, 0, 1, 1, g_time);
+	g_Renderer->Raider();
+	//g_Renderer->FragmentAni(g_mouseInput, g_time);
 	glutSwapBuffers();
 }
 
@@ -40,6 +53,14 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
+	float xPos = ((float)x - 250.f) / 250.f;
+	float yPos = -((float)y - 250.f) / 250.f;
+	g_mouseInput[g_mouse] = xPos;
+	g_mouseInput[g_mouse + 1] = yPos;
+	g_mouse += 2;
+	if (g_mouse >= 10)
+		g_mouse = 0;
+	//g_Renderer->InputPos(xPos, yPos);
 	RenderScene();
 }
 

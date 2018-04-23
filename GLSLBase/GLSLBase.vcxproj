@@ -171,12 +171,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\fillRect.fs" />
+    <None Include="Shaders\fillRect.vs" />
     <None Include="Shaders\FragmentAnimation.fs" />
     <None Include="Shaders\FragmentAnimation.vs" />
     <None Include="Shaders\Lecture05.fs" />
     <None Include="Shaders\Lecture05.vs" />
     <None Include="Shaders\Lecture06.fs" />
     <None Include="Shaders\Lecture06.vs" />
+    <None Include="Shaders\raider.fs" />
+    <None Include="Shaders\raider.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
     <None Include="Shaders\targetPaticle.fs" />

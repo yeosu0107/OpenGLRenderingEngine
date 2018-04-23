@@ -16,13 +16,20 @@ public:
 	bool IsInitialized();
 	void Test();
 
+	void InputPos(float x, float y) {
+		m_xPos = x;
+		m_yPos = y;
+	}
+
 	void Lecture2();
 	void Lecture3();
 	void Lecture4();
 	void Lecture5();
 	void Lecture6();
 	void TargetPaticle(float sx, float sy, float tx, float ty, float time);
-	void FragmentAni();
+	void FragmentAni(float* centers, float time);
+	void Raider();
+	void fillAll(float r, float g, float b, float a);
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -32,6 +39,8 @@ private:
 	void CreateVertexBufferObjects();		
 	void targetPaticleBufferObjects();
 	void fragmentAniBufferObjects();
+	void raiderBufferObjects();
+	void fillBufferObjcects();
 
 	bool m_Initialized = false;
 	
@@ -42,6 +51,8 @@ private:
 	GLuint m_SolidRectShader = 0;
 	GLuint m_targetPaticleShader = 0;
 	GLuint m_FragmentAniShader = 0;
+	GLuint m_raiderShader = 0;
+	GLuint m_fillShader = 0;
 
 	GLuint m_Lecture2 = 0;
 	GLuint m_Lecture3 = 0;
@@ -51,6 +62,8 @@ private:
 	GLuint m_tri= 0;
 	GLuint m_col = 0;
 	GLuint m_tricol = 0;
+	GLuint m_raider = 0;
+	GLuint m_fillrect = 0;
 
 	GLuint m_fragAni = 0;
 
