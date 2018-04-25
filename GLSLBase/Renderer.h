@@ -30,7 +30,7 @@ public:
 	void FragmentAni(float* centers, float time);
 	void Raider();
 	void fillAll(float r, float g, float b, float a);
-
+	void textureSampling();
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
@@ -39,8 +39,10 @@ private:
 	void CreateVertexBufferObjects();		
 	void targetPaticleBufferObjects();
 	void fragmentAniBufferObjects();
+	void textureSamplingBufferObjects();
 	void raiderBufferObjects();
 	void fillBufferObjcects();
+	
 
 	bool m_Initialized = false;
 	
@@ -53,6 +55,7 @@ private:
 	GLuint m_FragmentAniShader = 0;
 	GLuint m_raiderShader = 0;
 	GLuint m_fillShader = 0;
+	GLuint m_textureSampling = 0;
 
 	GLuint m_Lecture2 = 0;
 	GLuint m_Lecture3 = 0;
@@ -64,8 +67,10 @@ private:
 	GLuint m_tricol = 0;
 	GLuint m_raider = 0;
 	GLuint m_fillrect = 0;
-
 	GLuint m_fragAni = 0;
+	GLuint m_rect = 0;
+	GLuint m_texture = 0;
+
 
 	float scale = 0.0f;
 	float tmp = 1.0f;

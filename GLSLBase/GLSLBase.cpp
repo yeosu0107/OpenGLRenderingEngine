@@ -23,9 +23,9 @@ int    g_mouse = 0;
 
 void RenderScene(void)
 {
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	g_Renderer->fillAll(0, 0, 0, 0.1);
+	//g_Renderer->fillAll(0, 0, 0, 0.1);
 	// Renderer Test
 	//g_Renderer->Test();
 	//g_Renderer->Lecture3();
@@ -39,10 +39,11 @@ void RenderScene(void)
 	//	1,-1
 	//};
 	//g_time += 0.1f;
-	g_time += 0.01f;
+	//g_time += 0.01f;
 	//g_Renderer->TargetPaticle(0, 0, 1, 1, g_time);
-	g_Renderer->Raider();
+	//g_Renderer->Raider();
 	//g_Renderer->FragmentAni(g_mouseInput, g_time);
+	g_Renderer->textureSampling();
 	glutSwapBuffers();
 }
 

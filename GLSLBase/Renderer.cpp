@@ -23,11 +23,13 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_FragmentAniShader= CompileShaders("./Shaders/FragmentAnimation.vs", "./Shaders/FragmentAnimation.fs");
 	m_raiderShader = CompileShaders("./Shaders/raider.vs", "./Shaders/raider.fs");
 	m_fillShader = CompileShaders("./Shaders/fillRect.vs", "./Shaders/fillRect.fs");
+	m_textureSampling = CompileShaders("./Shaders/textureSampling.vs", "./Shaders/textureSampling.fs");
 	//Create VBOs
 	targetPaticleBufferObjects();
 	fragmentAniBufferObjects();
 	raiderBufferObjects();
 	fillBufferObjcects();
+	textureSamplingBufferObjects();
 
 	if (m_SolidRectShader > 0)
 	{
@@ -169,6 +171,50 @@ void Renderer::fragmentAniBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 }
 
+void Renderer::textureSamplingBufferObjects()
+{
+	float size = 0.5f;
+	float rect[] = 
+	{
+		-size, size, 0.0f, 0.0f, 1.0f,		//x,y,z,s,t
+		-size, -size, 0.0f, 0.0f, 0.0f,
+		size, size, 0.0f, 1.0f, 1.0f,
+		size, size, 0.0f , 1.0f, 1.0f,
+		-size, -size, 0.0f , 0.0f, 0.0f,
+		size, -size, 0.0f , 1.0f, 0.0f
+	};
+
+	static const GLulong checkerboard[] =
+	{
+		0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+		0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+		0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+		0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+		0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+		0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+		0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+		0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF
+	};
+
+	glGenBuffers(1, &m_rect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_rect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerboard);
+	//텍스쳐, 레벨(0), 인터널포맷RGBA,s축크기, t축크기, 0, 포맷 (RGBA), 채널당크기, 픽셀의 포인터
+	
+	//바인드 된 텍스쳐 데이터에 플래스 부여, 바인드 후에 해야 함
+	//GL_NEAREST (텍스쳐 상 근처 좌표를 가져옴)
+	//GL_LINEAR (사이값을 인터폴레이션해서 넣어줌, 성능이 떨어지지만 퀄리티가 좋다)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+}
+
 void Renderer::raiderBufferObjects()
 {
 	float rect[]
@@ -196,8 +242,6 @@ void Renderer::fillBufferObjcects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_fillrect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 }
-
-
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
@@ -533,4 +577,35 @@ void Renderer::fillAll(float r, float g, float b, float a)
 	glDisableVertexAttribArray(id0);
 
 	glDisable(GL_BLEND);
+}
+
+void Renderer::textureSampling()
+{
+	GLuint m_shader = m_textureSampling;
+	glUseProgram(m_shader);
+
+	GLint id0 = glGetAttribLocation(m_shader, "a_Position");
+	GLint id1 = glGetAttribLocation(m_shader, "a_Tex");
+	GLint id2 = glGetUniformLocation(m_shader, "uTex");
+
+	glEnableVertexAttribArray(id0);
+	glEnableVertexAttribArray(id1);
+
+	//패킹해서 한번에 그리기
+	glBindBuffer(GL_ARRAY_BUFFER, m_rect);
+	glVertexAttribPointer(id0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+	glVertexAttribPointer(id1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	//x,y,z,s,t,		x,y,z,s,t
+	//간격 5, 시작점 0 & 3
+	//포맷은 float 이므로 sizeof(float) 곱해줌
+	//id, 읽어올 갯수, 포맷, false, 간격, 시작점)
+
+	glUniform1i(id2, 0);
+	//0번슬롯 사용하겠다
+	glActiveTexture(GL_TEXTURE0);
+	//0번슬롯 활성화
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	//해당되는 슬롯에 텍스쳐가 바인드
+
+	glDrawArrays(GL_TRIANGLES, 0, 6); //모드, 시작포인터, 갯수
 }
