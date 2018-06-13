@@ -10,6 +10,9 @@
     <ClCompile Include="GLSLBase.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="LoadPng.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -21,54 +24,93 @@
     <ClInclude Include="targetver.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="LoadPng.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\SolidRect.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\SolidRect.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\Lecture05.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\Lecture05.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\Lecture06.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\Lecture06.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\targetPaticle.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\targetPaticle.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\FragmentAnimation.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\FragmentAnimation.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\raider.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\raider.vs">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="Shaders\fillRect.fs">
-      <Filter>Shader</Filter>
+      <Filter>Shader\2d</Filter>
     </None>
     <None Include="Shaders\fillRect.vs">
-      <Filter>Shader</Filter>
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\FragmentAnimation.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\FragmentAnimation.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\Lecture05.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\Lecture05.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\Lecture06.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\Lecture06.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\multiTexture.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\multiTexture.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\paticleAnimation2.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\paticleAnimation2.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\raider.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\raider.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\SolidRect.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\SolidRect.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\targetPaticle.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\targetPaticle.vs">
+      <Filter>Shader\2d</Filter>
     </None>
     <None Include="Shaders\textureSampling.fs">
-      <Filter>Shader</Filter>
+      <Filter>Shader\2d</Filter>
     </None>
     <None Include="Shaders\textureSampling.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\textureShader.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\textureShader.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\vertexAnimation.fs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\vertexAnimation.vs">
+      <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="Shaders\sampleCube.fs">
+      <Filter>Shader\3d</Filter>
+    </None>
+    <None Include="Shaders\sampleCube.vs">
+      <Filter>Shader\3d</Filter>
+    </None>
+    <None Include="Shaders\testShader.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\testShader.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>
@@ -84,6 +126,12 @@
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{67bf60d2-2daa-4412-a92a-1ef604d4703f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\2d">
+      <UniqueIdentifier>{eb96dd56-7515-499f-91b1-be3eee064197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\3d">
+      <UniqueIdentifier>{ca32e817-25b9-47c2-ac43-b0b14c8c6956}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

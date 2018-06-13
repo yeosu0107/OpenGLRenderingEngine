@@ -18,14 +18,14 @@ but WITHOUT ANY WARRANTY.
 Renderer *g_Renderer = NULL;
 
 float g_time = 0.0f;
-float g_mouseInput[10];
-int    g_mouse = 0;
+float mouseX, mouseY;
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	//g_Renderer->fillAll(0, 0, 0, 0.1);
+	glClearDepth(1.f);
+	//g_Renderer->fillAll(0, 0, 0, 0.1f);
 	// Renderer Test
 	//g_Renderer->Test();
 	//g_Renderer->Lecture3();
@@ -38,12 +38,17 @@ void RenderScene(void)
 	//	-1,-1,
 	//	1,-1
 	//};
-	//g_time += 0.1f;
 	//g_time += 0.01f;
-	//g_Renderer->TargetPaticle(0, 0, 1, 1, g_time);
+	//g_time += 0.01f;
+	//g_Renderer->TargetPaticle(0, -1, 0, 1, g_time);
+	//g_Renderer->vertexAnimation();
 	//g_Renderer->Raider();
 	//g_Renderer->FragmentAni(g_mouseInput, g_time);
-	g_Renderer->textureSampling();
+	//g_Renderer->textureTest();
+	//g_Renderer->drawBMPTexture();
+	//g_Renderer->paticleAnimation();
+	//g_Renderer->renderCube();
+	g_Renderer->renderTest();
 	glutSwapBuffers();
 }
 
@@ -56,17 +61,64 @@ void MouseInput(int button, int state, int x, int y)
 {
 	float xPos = ((float)x - 250.f) / 250.f;
 	float yPos = -((float)y - 250.f) / 250.f;
-	g_mouseInput[g_mouse] = xPos;
-	g_mouseInput[g_mouse + 1] = yPos;
-	g_mouse += 2;
-	if (g_mouse >= 10)
-		g_mouse = 0;
-	//g_Renderer->InputPos(xPos, yPos);
+
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		mouseX = x;
+		mouseY = y;
+	}
+
 	RenderScene();
+}
+
+void MouseMove(int x, int y)
+{
+	float valx = (x - mouseX) * 0.01f;
+	float valy = (y - mouseY)* 0.01f;
+
+	mouseX = x;
+	mouseY = y;
+
+	glm::vec3 rot = glm::vec3(valy, valx, 0);
+	g_Renderer->rotateModel(rot);
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
+	glm::vec3 move = glm::vec3(0);
+	glm::vec3 rot = glm::vec3(0);
+	float val = 0.f;
+	switch (key) {
+	case 'W':
+		move.z -= 0.5f;
+		break;
+	case 'S':
+		move.z += 0.5f;
+		break;
+	case 'A':
+		move.x -= 0.5f;
+		break;
+	case 'D':
+		move.x += 0.5f;
+		break;
+	case 'Z':
+		rot.x += 0.5f;
+		break;
+	case 'X':
+		rot.y += 0.5;
+		break;
+	case 'C':
+		rot.z += 0.5f;
+		break;
+	case 'Q':
+		val -= 0.1f;
+		break;
+	case 'E':
+		val += 0.1f;
+		break;
+	}
+	g_Renderer->moveModel(move);
+	g_Renderer->rotateModel(rot);
+	g_Renderer->scalingModel(val);
 	RenderScene();
 }
 
@@ -105,6 +157,7 @@ int main(int argc, char **argv)
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
 	glutMouseFunc(MouseInput);
+	glutMotionFunc(MouseMove);
 	glutSpecialFunc(SpecialKeyInput);
 
 	glutMainLoop();

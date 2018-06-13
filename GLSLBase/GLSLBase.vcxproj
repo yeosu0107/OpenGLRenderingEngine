@@ -156,11 +156,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LoadPng.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LoadPng.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="GLSLBase.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -179,14 +181,26 @@
     <None Include="Shaders\Lecture05.vs" />
     <None Include="Shaders\Lecture06.fs" />
     <None Include="Shaders\Lecture06.vs" />
+    <None Include="Shaders\multiTexture.fs" />
+    <None Include="Shaders\multiTexture.vs" />
+    <None Include="Shaders\paticleAnimation2.fs" />
+    <None Include="Shaders\paticleAnimation2.vs" />
     <None Include="Shaders\raider.fs" />
     <None Include="Shaders\raider.vs" />
+    <None Include="Shaders\sampleCube.fs" />
+    <None Include="Shaders\sampleCube.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
     <None Include="Shaders\targetPaticle.fs" />
     <None Include="Shaders\targetPaticle.vs" />
+    <None Include="Shaders\testShader.fs" />
+    <None Include="Shaders\testShader.vs" />
     <None Include="Shaders\textureSampling.fs" />
     <None Include="Shaders\textureSampling.vs" />
+    <None Include="Shaders\textureShader.fs" />
+    <None Include="Shaders\textureShader.vs" />
+    <None Include="Shaders\vertexAnimation.fs" />
+    <None Include="Shaders\vertexAnimation.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

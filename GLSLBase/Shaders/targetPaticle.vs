@@ -1,13 +1,11 @@
 #version 330
 
 in vec4 a_Position;
-in vec4 a_Color;
 
 uniform float time;
 uniform vec2 startPoint;
 uniform vec2 endPoint;
 
-out vec4 v_Color;
 
 const float PI = 3.141592;
 
@@ -36,5 +34,6 @@ void main()
 	nowPos.y, 
 	zValue, 
 	1.0f	);
-	v_Color = a_Color;
+
+	gl_PointSize = 10;
 }
